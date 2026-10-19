@@ -18,7 +18,10 @@ const userSchema = new mongoose.Schema(
     emailOtp: {
       type: String,
     },
-
+    isEmailVerified: {
+      type: Boolean,
+      default: false,
+    },
     emailOtpExpiresAt: {
       type: Date,
     },
