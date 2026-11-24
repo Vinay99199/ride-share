@@ -13,8 +13,8 @@ router.get(
   getPendingDriverApplications
 );
 
-router.put(
-  "/driver-applications/:applicationId",
+router.patch(
+  "/driver-applications/:applicationId/review",
   protect,
   admin,
   reviewDriverApplication
