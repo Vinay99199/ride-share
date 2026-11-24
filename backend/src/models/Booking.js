@@ -7,67 +7,49 @@ const bookingSchema = new mongoose.Schema(
       ref: "Ride",
       required: true,
     },
-
     passenger: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
-
-    pickup: {
-      type: {
-        type: String,
-        enum: ["Point"],
-        required: true,
-      },
-      coordinates: {
-        type: [Number],
-        required: true,
+    seatsBooked: {
+      type: Number,
+      required: true,
+      min: 1,
+      validate: {
+        validator: Number.isInteger,
+        message: "Seats booked must be a positive integer",
       },
     },
-
-    drop: {
-      type: {
-        type: String,
-        enum: ["Point"],
-        required: true,
-      },
-      coordinates: {
-        type: [Number],
-        required: true,
-      },
-    },
-
-    distanceKm: {
+    totalPrice: {
       type: Number,
       required: true,
       min: 0,
     },
-
-    fare: {
-      type: Number,
-      required: true,
-      min: 0,
-    },
-
     status: {
       type: String,
-      enum: ["pending", "accepted", "rejected", "cancelled", "completed"],
+      enum: ["pending", "confirmed", "rejected", "cancelled"],
       default: "pending",
+      required: true,
     },
-
-    startOtp: {
-      type: String,
-    },
-
-    paymentStatus: {
-      type: String,
-      enum: ["pending", "paid", "not_required"],
-      default: "not_required",
+    isActive: {
+      type: Boolean,
+      default: true,
+      select: false,
     },
   },
   {
     timestamps: true,
+  }
+);
+
+bookingSchema.index({ passenger: 1, createdAt: -1 });
+bookingSchema.index({ ride: 1, status: 1, createdAt: -1 });
+bookingSchema.index(
+  { ride: 1, passenger: 1 },
+  {
+    unique: true,
+    partialFilterExpression: { isActive: true },
   }
 );
 
