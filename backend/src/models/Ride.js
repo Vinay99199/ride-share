@@ -46,6 +46,26 @@ const rideSchema = new mongoose.Schema(
       type: pointSchema,
       required: true,
     },
+    pickupLocationName: {
+      type: String,
+      trim: true,
+      maxlength: 200,
+    },
+    pickupAddress: {
+      type: String,
+      trim: true,
+      maxlength: 500,
+    },
+    dropLocationName: {
+      type: String,
+      trim: true,
+      maxlength: 200,
+    },
+    dropAddress: {
+      type: String,
+      trim: true,
+      maxlength: 500,
+    },
     departureTime: {
       type: Date,
       required: true,
@@ -88,6 +108,15 @@ const rideSchema = new mongoose.Schema(
       default: "scheduled",
       required: true,
     },
+    startedAt: {
+      type: Date,
+      default: null,
+    },
+    trackingActive: {
+      type: Boolean,
+      default: false,
+      required: true,
+    },
   },
   {
     timestamps: true,
@@ -106,6 +135,9 @@ rideSchema.pre("validate", function () {
 rideSchema.index({ pickupLocation: "2dsphere" });
 rideSchema.index({ dropLocation: "2dsphere" });
 rideSchema.index({ status: 1, availableSeats: 1, departureTime: 1 });
+rideSchema.index({ driver: 1, departureTime: 1, status: 1 });
+rideSchema.index({ driver: 1, status: 1, departureTime: 1 });
+rideSchema.index({ driver: 1, createdAt: -1 });
 
 const Ride = mongoose.model("Ride", rideSchema);
 

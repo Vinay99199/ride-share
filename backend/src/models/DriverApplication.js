@@ -13,6 +13,7 @@ const driverApplicationSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
+      maxlength: 120,
     },
 
     vehicleNumber: {
@@ -20,6 +21,7 @@ const driverApplicationSchema = new mongoose.Schema(
       required: true,
       trim: true,
       uppercase: true,
+      maxlength: 30,
     },
 
     vehicleType: {
@@ -32,6 +34,12 @@ const driverApplicationSchema = new mongoose.Schema(
       type: String,
       enum: ["pending", "approved", "rejected"],
       default: "pending",
+    },
+
+    rejectionReason: {
+      type: String,
+      trim: true,
+      maxlength: 500,
     },
   },
   {
