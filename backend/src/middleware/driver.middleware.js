@@ -1,9 +1,19 @@
 
 import DriverApplication from "../models/DriverApplication.js";
 
-const requireApprovedDriver = async (req, res, next) => {
+export const createRequireApprovedDriver = ({
+  DriverApplicationModel = DriverApplication,
+  logger = console,
+} = {}) => async (req, res, next) => {
   try {
-    const approvedApplication = await DriverApplication.findOne({
+    if (!["user", "driver"].includes(req.user?.role)) {
+      return res.status(403).json({
+        success: false,
+        message: "Driver access required",
+      });
+    }
+
+    const approvedApplication = await DriverApplicationModel.findOne({
       user: req.user._id,
       status: "approved",
     });
@@ -18,7 +28,7 @@ const requireApprovedDriver = async (req, res, next) => {
     req.driverApplication = approvedApplication;
     next();
   } catch (error) {
-    console.error("Driver authorization error:", error.message);
+    logger.error("Driver authorization error:", error.message);
 
     return res.status(500).json({
       success: false,
@@ -26,5 +36,7 @@ const requireApprovedDriver = async (req, res, next) => {
     });
   }
 };
+
+const requireApprovedDriver = createRequireApprovedDriver();
 
 export default requireApprovedDriver;

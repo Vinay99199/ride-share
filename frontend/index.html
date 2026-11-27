@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#111318" />
+    <meta
+      name="description"
+      content="AVONEX — smart, trusted rides for your community."
+    />
+    <script>
+      (() => {
+        const validLanguages = ["en", "hi", "bn", "mr", "ta", "te", "gu", "kn", "ml", "pa"];
+        try {
+          const savedLanguage = localStorage.getItem("avonex_language");
+          document.documentElement.lang = validLanguages.includes(savedLanguage) ? savedLanguage : "en";
+        } catch {
+          document.documentElement.lang = "en";
+        }
+        const validThemes = ["light", "dark", "system"];
+        let preference = "dark";
+        try {
+          const saved = localStorage.getItem("avonex_theme");
+          if (validThemes.includes(saved)) preference = saved;
+        } catch {
+          preference = "dark";
+        }
+        const systemPrefersDark =
+          window.matchMedia("(prefers-color-scheme: dark)").matches;
+        const resolvedTheme =
+          preference === "system"
+            ? systemPrefersDark ? "dark" : "light"
+            : preference;
+        document.documentElement.dataset.theme = resolvedTheme;
+        document.documentElement.dataset.themePreference = preference;
+        document.querySelector('meta[name="theme-color"]').content =
+          resolvedTheme === "dark" ? "#111318" : "#f5f7fa";
+      })();
+    </script>
+    <title>AVONEX — Smart Ride Sharing</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

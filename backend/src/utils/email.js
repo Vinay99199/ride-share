@@ -17,9 +17,12 @@ export const sendOtpEmail = async (email, otp) => {
       text: `Your AVONEX verification OTP is ${otp}. It expires in 10 minutes.`,
     });
 
-    console.log("OTP email sent:", info.messageId);
+    console.log("OTP email sent");
   } catch (error) {
-    console.error("OTP email failed:", error);
+    console.error(
+      "OTP email failed:",
+      error instanceof Error ? error.name : "UnknownError"
+    );
     throw error;
   }
 };
